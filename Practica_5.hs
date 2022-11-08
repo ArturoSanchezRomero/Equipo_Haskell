@@ -114,25 +114,31 @@ getAreaTotal lf = sum [ getArea x | x <- lf ]
 --Con la representación define una malla de 5x5 con al menos 12 segmentos gruesos y los demás delgados. 
 --(una malla de 5x5 tiene 60 segmentos). Puedes utilizar arreglos o utilizar listas y/o tuplas.
 
-horizontal2 =  [(x,2)| x<-[0..29]] 
+horizontal3 =  [(x,2)| x<-[0..29]] 
 
-horizontal l | length l == 0 = []
-              | fst (head l) == 2 =  [(fst(head l),1)] ++  horizontal (drop 1 l)
-              | fst (head l) == 3 =  [(fst(head l),1)] ++  horizontal (drop 1 l)
-              | fst (head l) == 4 =  [(fst(head l),1)] ++  horizontal (drop 1 l)
-              | fst (head l) == 15 = [(fst(head l),1)] ++  horizontal (drop 1 l)
-              | fst (head l) == 21 = [(fst(head l),1)] ++  horizontal (drop 1 l)
-              | fst (head l) == 22 = [(fst(head l),1)] ++  horizontal (drop 1 l)
-              | otherwise = [head l] ++ horizontal (drop 1 l)
+horizontal2 l | length l == 0 = []
+              | fst (head l) == 2 =  [(fst(head l),1)] ++  horizontal2 (drop 1 l)
+              | fst (head l) == 3 =  [(fst(head l),1)] ++  horizontal2 (drop 1 l)
+              | fst (head l) == 4 =  [(fst(head l),1)] ++  horizontal2 (drop 1 l)
+              | fst (head l) == 15 = [(fst(head l),1)] ++  horizontal2 (drop 1 l)
+              | fst (head l) == 21 = [(fst(head l),1)] ++  horizontal2 (drop 1 l)
+              | fst (head l) == 22 = [(fst(head l),1)] ++  horizontal2 (drop 1 l)
+              | otherwise = [head l] ++ horizontal2 (drop 1 l)
 
-vertical2 =  [(x,2)| x<-[0..29]] 
+horizontal =  horizontal2 horizontal3
 
-vertical l | length l == 0 = []
-              | fst (head l) == 16 =  [(fst(head l),1)] ++  vertical (drop 1 l)
-              | fst (head l) == 17 =  [(fst(head l),1)] ++  vertical (drop 1 l)
-              | fst (head l) == 28 =  [(fst(head l),1)] ++  vertical (drop 1 l)
-              | fst (head l) == 29 = [(fst(head l),1)] ++  vertical (drop 1 l)
-              | otherwise = [head l] ++ vertical (drop 1 l)
+
+vertical3 =  [(x,2)| x<-[0..29]] 
+
+vertical2 l | length l == 0 = []
+              | fst (head l) == 16 =  [(fst(head l),1)] ++  vertical2 (drop 1 l)
+              | fst (head l) == 17 =  [(fst(head l),1)] ++  vertical2 (drop 1 l)
+              | fst (head l) == 28 =  [(fst(head l),1)] ++  vertical2 (drop 1 l)
+              | fst (head l) == 29 = [(fst(head l),1)] ++  vertical2 (drop 1 l)
+              | otherwise = [head l] ++ vertical2 (drop 1 l)
+
+vertical = vertical2 vertical3
+
 
 -- =======================================
 -- ==         EJERCICIO 4.2             ==
@@ -190,4 +196,21 @@ moveRobot (Robot (i,j) t c) | c == Norte && i > 0  = Robot (i-1,j) t c
 --posición (4,3), elabora todas las posibilidades que consideres y verifica que ruta es la que 
 --le consume menos tiempo, siguiendo el método del algoritmo de la fuerza bruta.
 
---recorre :: Robot -> (Int,Int) -> 
+
+-- Estructura del árbol
+data Abb a = Vacio | Nodo a (Abb a) (Abb a) deriving (Show)
+
+-- #Fila * Cantidad de Columnas + #de Columna
+
+
+--Formula Ubicación del valor (Grosor) Horizontal  #i x #Columnas Totales + #j = Posicion valor
+--Formula Ubicacion del Valor (Grosor) Vertical    #j x #Filas Totales + #i  = Poisicon valor 
+
+
+-- Crea un nuevo árbol a partir de una lista
+-- crearDeLista (Lista de números)
+crearDeLista :: (Ord a) => [a] -> Abb a
+crearDeLista [] = Vacio
+crearDeLista (raiz:sub) = Nodo raiz (crearDeLista (filter (<= raiz) sub)) (crearDeLista (filter (> raiz) sub))
+
+
