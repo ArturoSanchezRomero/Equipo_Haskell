@@ -214,3 +214,42 @@ crearDeLista [] = Vacio
 crearDeLista (raiz:sub) = Nodo raiz (crearDeLista (filter (<= raiz) sub)) (crearDeLista (filter (> raiz) sub))
 
 
+
+ruta1 = [(1,2),(2,2),(3,2),(4,2),(4,3)]
+ruta2 = [(1,2),(2,2),(3,2),(3,3),(4,3)]
+ruta3 = [(1,2),(2,2),(2,3),(3,3),(4,3)]
+ruta4 = [(1,2),(1,3),(2,3),(3,3),(4,3)]
+
+allRutas = [ruta1,ruta2,ruta3,ruta4]
+
+-- ============ Consultas ==================
+consultaV n = [ x | (p,x) <- vertical, p == n ]
+consultaH n = [ x | (p,x) <- horizontal, p == n ]
+
+
+calLineas :: [(Int,Int)] -> Int
+calLineas l    | length l == 0 = 0
+               | length (drop 1 l) == 0 = 0
+               | not (fst (head l) == fst (head (drop 1 l)))  = head (consultaV (snd (head l) * 5 + fst (head l))) + calLineas (drop 1 l) 
+               | otherwise =  head (consultaH (fst (head l) * 5 + snd (head l))) + calLineas (drop 1 l)
+               
+
+calVuelta :: [(Int,Int)] -> Int
+calVuelta l  | length l <= 2 = 0
+             | (fst (head l) < fst (head (drop 1 l)) && fst (head (drop 1 l)) <  fst (head (drop 2 l))  || snd (head l) == snd (head (drop 1 l)) && snd (head (drop 1 l)) ==  snd (head (drop 2 l))) = 0 + calVuelta (drop 1 l)
+             | fst (head l) == fst (head (drop 1 l)) && fst (head (drop 1 l)) ==  fst (head (drop 2 l))  || snd (head l) < snd (head (drop 1 l)) && snd (head (drop 1 l)) <  snd (head (drop 2 l)) = 0 + calVuelta (drop 1 l)
+             | otherwise = 5 +  calVuelta (drop 1 l)
+
+
+--Funcion LLmada en otra funcion para tomar desicion y return "Lista"
+calTol l = calLineas l + calVuelta l 
+
+
+-- Funcion que una todo (Funcion head allRutas si es el timpo menor return esa lista)
+
+
+-- =======================================
+-- ==         EJERCICIO 4.7             ==
+-- =======================================
+--Elabora una función que tome una malla, un robot y se dirija a la posición (x,y). 
+--La función deberá retornar una lista de las acciones que debió realizar para llegar a su destino.
