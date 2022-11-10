@@ -213,6 +213,12 @@ crearDeLista :: (Ord a) => [a] -> Abb a
 crearDeLista [] = Vacio
 crearDeLista (raiz:sub) = Nodo raiz (crearDeLista (filter (<= raiz) sub)) (crearDeLista (filter (> raiz) sub))
 
+rutas (inicioI,inicioJ) (finI, finJ) = [ruta1,ruta2]
+   where
+      ruta1 = [(inicioI,inicioJ)] ++ [(x,inicioJ)|x<-listax] ++ [(finI,y)|y<-listay]
+      ruta2 = [(inicioI,inicioJ)] ++ [(inicioI,y)|y<-listay] ++ [(x,finJ)|x<-listax]
+      listax = [x | x<-[(inicioI+1)..(finI)]]
+      listay = [y | y<-[(inicioJ+1)..finJ]]
 
 
 --ruta1 = [(1,2),(2,2),(3,2),(4,2),(4,3)]
