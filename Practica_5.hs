@@ -215,12 +215,13 @@ crearDeLista (raiz:sub) = Nodo raiz (crearDeLista (filter (<= raiz) sub)) (crear
 
 
 
-ruta1 = [(1,2),(2,2),(3,2),(4,2),(4,3)]
-ruta2 = [(1,2),(2,2),(3,2),(3,3),(4,3)]
-ruta3 = [(1,2),(2,2),(2,3),(3,3),(4,3)]
-ruta4 = [(1,2),(1,3),(2,3),(3,3),(4,3)]
+--ruta1 = [(1,2),(2,2),(3,2),(4,2),(4,3)]
+--ruta2 = [(1,2),(2,2),(3,2),(3,3),(4,3)]
+--ruta3 = [(1,2),(2,2),(2,3),(3,3),(4,3)]
+--ruta4 = [(1,2),(1,3),(2,3),(3,3),(4,3)]
+--allRutas = [ruta1,ruta2,ruta3,ruta4]
 
-allRutas = [ruta1,ruta2,ruta3,ruta4]
+
 
 -- ============ Consultas ==================
 consultaV n = [ x | (p,x) <- vertical, p == n ]
@@ -267,6 +268,4 @@ rutaOptima l | length l == 1 = head l
 --Elabora una función que tome una malla, un robot y se dirija a la posición (x,y). 
 --La función deberá retornar una lista de las acciones que debió realizar para llegar a su destino.
 
-
---navegaRobot mH mV (Robot (i,j) t c) (x,y) | 
 
