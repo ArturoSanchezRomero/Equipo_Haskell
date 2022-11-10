@@ -227,25 +227,38 @@ consultaV n = [ x | (p,x) <- vertical, p == n ]
 consultaH n = [ x | (p,x) <- horizontal, p == n ]
 
 
-calLineas :: [(Int,Int)] -> Int
 calLineas l    | length l == 0 = 0
                | length (drop 1 l) == 0 = 0
                | not (fst (head l) == fst (head (drop 1 l)))  = head (consultaV (snd (head l) * 5 + fst (head l))) + calLineas (drop 1 l) 
                | otherwise =  head (consultaH (fst (head l) * 5 + snd (head l))) + calLineas (drop 1 l)
                
 
-calVuelta :: [(Int,Int)] -> Int
 calVuelta l  | length l <= 2 = 0
              | (fst (head l) < fst (head (drop 1 l)) && fst (head (drop 1 l)) <  fst (head (drop 2 l))  || snd (head l) == snd (head (drop 1 l)) && snd (head (drop 1 l)) ==  snd (head (drop 2 l))) = 0 + calVuelta (drop 1 l)
              | fst (head l) == fst (head (drop 1 l)) && fst (head (drop 1 l)) ==  fst (head (drop 2 l))  || snd (head l) < snd (head (drop 1 l)) && snd (head (drop 1 l)) <  snd (head (drop 2 l)) = 0 + calVuelta (drop 1 l)
              | otherwise = 5 +  calVuelta (drop 1 l)
 
 
---Funcion LLmada en otra funcion para tomar desicion y return "Lista"
-calTol l = calLineas l + calVuelta l 
+-- ======= Calculo de vueltas y segmanetos
+getTiempo (Robot (i,j) t c) = t
+
+calvueltaInicio l |  fst (head l)  < fst (head (drop 1 l))  =  getTiempo(giraRobot (Robot (0,0) 0 Oeste) (Sur))
+                  |  fst (head l)  > fst (head (drop 1 l))  =  getTiempo(giraRobot (Robot (0,0) 0 Oeste) (Norte))
+                  |  snd (head l)  > snd (head (drop 1 l))  =  getTiempo(giraRobot (Robot (0,0) 0 Oeste) (Oeste))
+                  |  otherwise  =  getTiempo(giraRobot (Robot (0,0) 0 Oeste) (Este))
+
+calTol l = calLineas l + calVuelta l + calvueltaInicio l
 
 
--- Funcion que una todo (Funcion head allRutas si es el timpo menor return esa lista)
+-- ====== Lista de todos los tiempos de las Rutas ==============
+alltiempos l | length l == 0 = []
+             | otherwise = [[calTol (head l)]] ++ alltiempos (drop 1 l)
+
+-- ======== Lista de la Ruta mas Optima FUNCION --> 4.6 <-- =========================
+rutaOptima l | length l == 1 = head l
+             | head (alltiempos l) <= head (drop 1 (alltiempos l)) = rutaOptima ([head l] ++ drop 2 l)
+             | otherwise = rutaOptima (drop 1 l)
+             
 
 
 -- =======================================
@@ -253,3 +266,7 @@ calTol l = calLineas l + calVuelta l
 -- =======================================
 --Elabora una función que tome una malla, un robot y se dirija a la posición (x,y). 
 --La función deberá retornar una lista de las acciones que debió realizar para llegar a su destino.
+
+
+--navegaRobot mH mV (Robot (i,j) t c) (x,y) | 
+
