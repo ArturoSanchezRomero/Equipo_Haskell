@@ -213,19 +213,13 @@ crearDeLista :: (Ord a) => [a] -> Abb a
 crearDeLista [] = Vacio
 crearDeLista (raiz:sub) = Nodo raiz (crearDeLista (filter (<= raiz) sub)) (crearDeLista (filter (> raiz) sub))
 
-rutas (inicioI,inicioJ) (finI, finJ) = [ruta1,ruta2]
-   where
-      ruta1 = [(inicioI,inicioJ)] ++ [(x,inicioJ)|x<-listax] ++ [(finI,y)|y<-listay]
-      ruta2 = [(inicioI,inicioJ)] ++ [(inicioI,y)|y<-listay] ++ [(x,finJ)|x<-listax]
-      listax = [x | x<-[(inicioI+1)..(finI)]]
-      listay = [y | y<-[(inicioJ+1)..finJ]]
 
+ruta1 = [(1,2),(2,2),(3,2),(4,2),(4,3)]
+ruta2 = [(1,2),(2,2),(3,2),(3,3),(4,3)]
+ruta3 = [(1,2),(2,2),(2,3),(3,3),(4,3)]
+ruta4 = [(1,2),(1,3),(2,3),(3,3),(4,3)]
 
---ruta1 = [(1,2),(2,2),(3,2),(4,2),(4,3)]
---ruta2 = [(1,2),(2,2),(3,2),(3,3),(4,3)]
---ruta3 = [(1,2),(2,2),(2,3),(3,3),(4,3)]
---ruta4 = [(1,2),(1,3),(2,3),(3,3),(4,3)]
---allRutas = [ruta1,ruta2,ruta3,ruta4]
+allRutas = [ruta1,ruta2,ruta3,ruta4]
 
 
 
@@ -275,3 +269,53 @@ rutaOptima l | length l == 1 = head l
 --La función deberá retornar una lista de las acciones que debió realizar para llegar a su destino.
 
 
+rutasDinamica (inicioI,inicioJ) (finI, finJ) = [ruta11,ruta22]
+   where
+      ruta11 = [(inicioI,inicioJ)] ++ [(x,inicioJ)|x<-listax] ++ [(finI,y)|y<-listay]
+      ruta22 = [(inicioI,inicioJ)] ++ [(inicioI,y)|y<-listay] ++ [(x,finJ)|x<-listax]
+      listax = [x | x<-[(inicioI+1)..(finI)]]
+      listay = [y | y<-[(inicioJ+1)..finJ]]
+
+
+
+navegaRobot :: [(Int,Int)] -> [(Int,Int)]  -> Robot -> (Int,Int) -> [(Int,Int)] 
+navegaRobot mh mv (Robot (is,js) ti c) (a,b) = rutaOptimad (rutasDinamica (is,js) (a,b))
+     where
+      consultaVd n = [ x | (p,x) <- [(0,2),(1,2),(2,2),(3,2),(4,2),(5,2),(6,2)], p == n ]
+      consultaHd n =  [ x | (p,x) <- [(0,2),(1,2),(2,2),(3,2),(4,2),(5,2),(6,2)], p == n ]
+      calLineasd l | length l == 0 = 0
+                   | length (drop 1 l) == 0 = 0
+                   | not (fst (head l) == fst (head (drop 1 l)))  = head (consultaVd (snd (head l) * 5 + fst (head l))) + calLineasd (drop 1 l) 
+                   | otherwise =  head (consultaHd (fst (head l) * 5 + snd (head l))) + calLineasd (drop 1 l)
+      calVueltad l  | length l <= 2 = 0
+                    | (fst (head l) < fst (head (drop 1 l)) && fst (head (drop 1 l)) <  fst (head (drop 2 l))  || snd (head l) == snd (head (drop 1 l)) && snd (head (drop 1 l)) ==  snd (head (drop 2 l))) = 0 + calVueltad (drop 1 l)
+                    | fst (head l) == fst (head (drop 1 l)) && fst (head (drop 1 l)) ==  fst (head (drop 2 l))  || snd (head l) < snd (head (drop 1 l)) && snd (head (drop 1 l)) <  snd (head (drop 2 l)) = 0 + calVueltad (drop 1 l)
+                    | otherwise = 5 +  calVueltad (drop 1 l)
+      getTiempod (Robot (_,_) t _) = t
+      calvueltaIniciod l |  fst (head l)  < fst (head (drop 1 l))  =  getTiempod(giraRobot (Robot (0,0) 0 c) (Sur))
+                         |  fst (head l)  > fst (head (drop 1 l))  =  getTiempod(giraRobot (Robot (0,0) 0 c) (Norte))
+                         |  snd (head l)  > snd (head (drop 1 l))  =  getTiempod(giraRobot (Robot (0,0) 0 c) (Oeste))
+                         |  otherwise  =  getTiempod(giraRobot (Robot (0,0) 0 c) (Este))
+      calTold l = calLineasd l + calVueltad l + calvueltaIniciod l
+      alltiemposd l | length l == 0 = []
+                    | otherwise = [[calTold (head l)]] ++ alltiemposd (drop 1 l)
+      rutaOptimad l | length l == 1 = head l
+                    | head (alltiemposd l) <= head (drop 1 (alltiemposd l)) = rutaOptimad ([head l] ++ drop 2 l)
+                    | otherwise = rutaOptimad (drop 1 l)
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+               
