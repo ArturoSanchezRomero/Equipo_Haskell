@@ -275,14 +275,15 @@ rutasDinamica (inicioI,inicioJ) (finI, finJ) = [ruta11,ruta22]
       ruta22 = [(inicioI,inicioJ)] ++ [(inicioI,y)|y<-listay] ++ [(x,finJ)|x<-listax]
       listax = [x | x<-[(inicioI+1)..(finI)]]
       listay = [y | y<-[(inicioJ+1)..finJ]]
+      
 
 
 
 navegaRobot :: [(Int,Int)] -> [(Int,Int)]  -> Robot -> (Int,Int) -> [(Int,Int)] 
 navegaRobot mh mv (Robot (is,js) ti c) (a,b) = rutaOptimad (rutasDinamica (is,js) (a,b))
      where
-      consultaVd n = [ x | (p,x) <- [(0,2),(1,2),(2,2),(3,2),(4,2),(5,2),(6,2)], p == n ]
-      consultaHd n =  [ x | (p,x) <- [(0,2),(1,2),(2,2),(3,2),(4,2),(5,2),(6,2)], p == n ]
+      consultaVd n = [ x | (p,x) <- mv, p == n ]
+      consultaHd n =  [ x | (p,x) <- mh, p == n ]
       calLineasd l | length l == 0 = 0
                    | length (drop 1 l) == 0 = 0
                    | not (fst (head l) == fst (head (drop 1 l)))  = head (consultaVd (snd (head l) * 5 + fst (head l))) + calLineasd (drop 1 l) 
