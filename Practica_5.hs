@@ -92,8 +92,6 @@ getAreaTotal lf = sum [ getArea x | x <- lf ]
 
 
 
-
-
 -- =======================================
 -- ==         EJERCICIO 4               ==
 -- =======================================
@@ -275,7 +273,7 @@ rutasDinamica (inicioI,inicioJ) (finI, finJ) = [ruta11,ruta22]
       ruta22 = [(inicioI,inicioJ)] ++ [(inicioI,y)|y<-listay] ++ [(x,finJ)|x<-listax]
       listax = [x | x<-[(inicioI+1)..(finI)]]
       listay = [y | y<-[(inicioJ+1)..finJ]]
-      
+
 
 
 
@@ -286,8 +284,8 @@ navegaRobot mh mv (Robot (is,js) ti c) (a,b) = rutaOptimad (rutasDinamica (is,js
       consultaHd n =  [ x | (p,x) <- mh, p == n ]
       calLineasd l | length l == 0 = 0
                    | length (drop 1 l) == 0 = 0
-                   | not (fst (head l) == fst (head (drop 1 l)))  = head (consultaVd (snd (head l) * 5 + fst (head l))) + calLineasd (drop 1 l) 
-                   | otherwise =  head (consultaHd (fst (head l) * 5 + snd (head l))) + calLineasd (drop 1 l)
+                   | not (fst (head l) == fst (head (drop 1 l)))  = sum (consultaVd (snd (head l) * 5 + fst (head l))) + calLineasd (drop 1 l) 
+                   | otherwise =  sum (consultaHd (fst (head l) * 5 + snd (head l))) + calLineasd (drop 1 l)
       calVueltad l  | length l <= 2 = 0
                     | (fst (head l) < fst (head (drop 1 l)) && fst (head (drop 1 l)) <  fst (head (drop 2 l))  || snd (head l) == snd (head (drop 1 l)) && snd (head (drop 1 l)) ==  snd (head (drop 2 l))) = 0 + calVueltad (drop 1 l)
                     | fst (head l) == fst (head (drop 1 l)) && fst (head (drop 1 l)) ==  fst (head (drop 2 l))  || snd (head l) < snd (head (drop 1 l)) && snd (head (drop 1 l)) <  snd (head (drop 2 l)) = 0 + calVueltad (drop 1 l)
@@ -305,18 +303,4 @@ navegaRobot mh mv (Robot (is,js) ti c) (a,b) = rutaOptimad (rutasDinamica (is,js
                     | otherwise = rutaOptimad (drop 1 l)
 
       
-
       
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-               
