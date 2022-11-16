@@ -28,20 +28,8 @@ import Control.Monad
 bienvenido = do
             putStrLn "Bienvenido al Juego Crap"
 
-tiraDado::IO Int
-tiraDado = do
-           dado<-randomRIO(1,6)
-           return dado 
 
-tiraDado2::IO Int
-tiraDado2= do
-           dado1<-randomRIO(1,6)
-           dado2<-randomRIO(1,6)
-           return (dado1+dado2)
-
-suma::Int -> Int -> Int
-suma x y = (x+y)
-
+-- Funcion Principal --
 juegaCrap :: IO () 
 juegaCrap = do
     
@@ -68,33 +56,32 @@ juegaCrap = do
               dados2<-randomRIO(1,6)
               let resultado2 = suma (dados1) (dados2)
 
-
-              -- Para mostrar el valor
-              putStrLn ("12")
-
-
-              if(resultado2 == 7)then(putStrLn ("Perdiste: sacaste 7"))else (do juegaCrap2)
+              if(resultado2 == punto)then(putStrLn ("Felicidades Ganaste Con tu Punto "))else do juegaCrap2 punto
 
     return ()
 
 
-juegaCrap2 :: IO () 
-juegaCrap2 = do
-      putStrLn ("Vuelve a tirar")
-      -- Leemos el anterior valor
+juegaCrap2 :: Int -> IO ()
+juegaCrap2 a = do
 
-      -- Calculamos el segundo valor
-      dados1<-randomRIO(1,6)
-      dados2<-randomRIO(1,6)
-      let resultado2 = suma (dados1) (dados2)
+     dados1<-randomRIO(1,6)
+     dados2<-randomRIO(1,6)
+     let resultado2 = suma (dados1) (dados2)
 
-      if resultado2 == 7 then putStrLn ("Perdiste: sacaste 7") else (do juegaCrap2)
+     case (show (resultado2)) of
+        "7" ->  do
+              putStrLn ("Perdiste Por el Valor 7")
+        a ->  do
+              putStrLn ("Felicidades Ganaste Con tu Punto : Resultado" ++ a)
+        _    ->  do
+              juegaCrap2 a
+
+     return ()
+
+suma::Int -> Int -> Int
+suma x y = (x+y)
 
 
-
-
---Elabore un programa en haskell que simule este juego utilizando la programación iterativa y recursiva, 
---así como descomposición funciones y la generación de números aleatorios.
 
 --a.- Modifique el programa para que el usuario pueda hacer apuesta y el programa indique quien gana la 
 --apuesta. El programa debe solicitar al usuario si después de cada juego quiere seguir apostando, 
@@ -103,6 +90,23 @@ juegaCrap2 = do
 --uno de los dos gano más veces que el otro, por ejemplo si se jugaron 5 rondas, y 3 gano el usuario y 2 el 
 --computador, el ganador fue el usuario, si por alguna razón la misma cantidad de juegos fueron para ambos, 
 --se declara un empate.
+
+
+juegaCrapApuesta :: IO ()
+juegaCrapApuesta = do
+       putStrLn ("Bienvenido Al juego Crap con Apuestas")
+       putStrLn ("Ingrese cuanto quiere postar")
+       dinero<- getLine
+       juegaCrap
+       
+
+
+           
+             
+                  
+
+
+
 
 
 --2.- Elabore un programa que integre los ejercicios del robot para que solicite al usuario un robot y 
