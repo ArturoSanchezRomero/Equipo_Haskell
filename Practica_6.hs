@@ -108,10 +108,6 @@ juegaCrapApuesta = do
              
                   
 
-
-
-
-
 --2.- Elabore un programa que integre los ejercicios del robot para que solicite al usuario un robot y 
 --después vaya solicitando las opciones que tiene para recibir órdenes.
 --a) Mover 1 segmento el robot en dirección indicada por el mismo robot.
