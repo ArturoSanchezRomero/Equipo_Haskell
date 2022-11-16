@@ -248,7 +248,7 @@ operaRobot (Robot (i,j) t c)=
        putStrLn ""
        operacion <- getLine
        case operacion of
-           "girar" -> do 
+            "girar" -> do 
                      putStr ("Ingresa la direccion del robot [Norte/Este/Sur/Oeste]")
                      putStrLn ""
                      n <- getLine
@@ -261,10 +261,36 @@ operaRobot (Robot (i,j) t c)=
                                    operaRobot (giraRobot (Robot (i,j) t c) (Sur))
                         "Oeste" -> do
                                    operaRobot (giraRobot (Robot (i,j) t c) (Oeste))
-            
+                        _ ->  operaRobot (Robot (i,j) t c)
+            "mover" -> do 
+                  operaRobot (moveRobot (Robot (i,j) t c))
+
+            "terminar" -> do 
+                     putStrLn ("Detalles de tu Robot") 
+                     putStrLn ("Cordenada :  ("++show i++ " , "++show j++")") 
+                     putStrLn ("Tiempo Transcurrido :  "++ show t)
+
+                     case c of
+                        Norte -> do
+                                   putStrLn ("Cardinalidad :  Norte")
+                        Este -> do
+                                   putStrLn ("Cardinalidad :  Este")
+                        Sur -> do
+                                    putStrLn ("Cardinalidad :  Sur")
+                        Oeste -> do
+                                   putStrLn ("Cardinalidad :  Oeste")
+                             
+                        
+            _ -> operaRobot (Robot (i,j) t c)
+
+funcionTiempo t = t + 2      
                                     
-
-
+moveRobot :: Robot -> Robot
+moveRobot (Robot (i,j) t c) | c == Norte && i > 0  = Robot (i-1,j) t c
+                            | c == Este && j < 5 = Robot (i,j+1) t c
+                            | c == Sur && i < 5 = Robot (i+1,j) t c
+                            | c == Oeste && j > 0 =  Robot (i,j-1) t c
+                            | otherwise  =  Robot (i,j) t c 
 
 data Robot = Robot (Int,Int) Int Cardinales deriving (Show, Eq, Ord)
 data Cardinales = Norte | Este | Sur | Oeste deriving (Show, Eq, Ord)
