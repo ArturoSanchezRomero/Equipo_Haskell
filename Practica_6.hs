@@ -1,8 +1,6 @@
 import System.Random
 import Control.Monad
 
-
-
 -- =======================================================
 -- ==                   PRACTICA 6                     ==
 -- ==                                                   ==
@@ -30,12 +28,6 @@ import Control.Monad
 bienvenido = do
             putStrLn "Bienvenido al Juego Crap"
 
-perdiste = do
-            putStrLn "Perdiste "
-
-ganaste = do
-            putStrLn "Felicidades Ganaste"
-
 tiraDado::IO Int
 tiraDado = do
            dado<-randomRIO(1,6)
@@ -47,9 +39,8 @@ tiraDado2= do
            dado2<-randomRIO(1,6)
            return (dado1+dado2)
 
-valor::IO Int
-valor= do
-           return 7
+suma::Int -> Int -> Int
+suma x y = (x+y)
 
 juegaCrap :: IO () 
 juegaCrap = do
@@ -71,31 +62,34 @@ juegaCrap = do
         "12" -> do
               putStrLn ("Perdiste : Resultado 12")
         _    -> do
-              putStrLn ("Nadie Gano : Vuelte a tirar")
-
+              putStrLn ("Vuelves a tirar, si sacas 7 pierdes")
               let punto = resultado
               dados1<-randomRIO(1,6)
               dados2<-randomRIO(1,6)
               let resultado2 = suma (dados1) (dados2)
 
-              if(resultado2 == punto)then(putStrLn ("Iguales"))else do (if(juegaCrap2 == punto)then(putStrLn ("Iguales"))else(do juegaCrap2))
+
+              -- Para mostrar el valor
+              putStrLn ("12")
+
+
+              if(resultado2 == 7)then(putStrLn ("Perdiste: sacaste 7"))else (do juegaCrap2)
 
     return ()
 
 
-juegaCrap2 ::IO ()
+juegaCrap2 :: IO () 
 juegaCrap2 = do
-     dados1<-randomRIO(1,6)
-     dados2<-randomRIO(1,6)
-     return (dados1+dados2)
+      putStrLn ("Vuelve a tirar")
+      -- Leemos el anterior valor
 
-     
+      -- Calculamos el segundo valor
+      dados1<-randomRIO(1,6)
+      dados2<-randomRIO(1,6)
+      let resultado2 = suma (dados1) (dados2)
 
+      if resultado2 == 7 then putStrLn ("Perdiste: sacaste 7") else (do juegaCrap2)
 
-
-
-suma::Int -> Int -> Int
-suma x y = (x+y)
 
 
 
